@@ -1,7 +1,9 @@
-"""Frontend-facing functions for a single cubie's orientation state.
+"""Frontend-facing functions for cubie orientation state.
 
-Right now a cube state is just a 3x3 orientation matrix. Transforms are also
-3x3 matrices. Applying a transform means left-multiplying the state.
+Single-cubie state: 3×3 orientation matrix (identity = solved).
+Three-cubie state: 9×3 matrix — cubie k occupies rows 3k..3k+2.
+
+In both cases, applying a transform means left-multiplying the state.
 """
 
 from __future__ import annotations
@@ -12,6 +14,7 @@ from numpy.typing import NDArray
 from cube_kernel.transforms import TRANSFORMS
 
 Matrix = NDArray[np.integer]
+CubieArray = NDArray[np.integer]  # shape (N, 3, 3)
 
 
 def identity() -> Matrix:
@@ -82,3 +85,9 @@ def matrix_to_list(matrix: Matrix) -> list[list[int]]:
     """Convert a NumPy matrix to plain Python lists for JSON."""
 
     return [[int(value) for value in row] for row in np.asarray(matrix, dtype=int)]
+
+
+def initial_cubies_3() -> Matrix:
+    """Return 3 cubies in solved orientation as a (9×3) state matrix."""
+
+    return np.tile(np.eye(3, dtype=int), (3, 1))
