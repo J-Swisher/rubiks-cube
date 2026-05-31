@@ -14,6 +14,7 @@ from cube_kernel.api import (
 from cube_kernel.transforms import (
     cycle_bwd,
     cycle_fwd,
+    face_state,
     orient_at_0,
     orient_at_1,
     orient_at_2,
@@ -34,6 +35,7 @@ __all__ = [
     "apply_transform",
     "cycle_bwd",
     "cycle_fwd",
+    "face_state",
     "identity",
     "initial_cubies_3",
     "matrix_to_list",

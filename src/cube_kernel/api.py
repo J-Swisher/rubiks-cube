@@ -1,7 +1,7 @@
 """Frontend-facing functions for cubie orientation state.
 
-Single-cubie state: 3×3 orientation matrix (identity = solved).
-Three-cubie state: 9×3 matrix — cubie k occupies rows 3k..3k+2.
+Single-cubie state: 3x3 orientation matrix (identity = solved).
+Three-cubie state: 9x3 matrix — cubie k occupies rows 3k..3k+2.
 
 In both cases, applying a transform means left-multiplying the state.
 """
@@ -88,6 +88,6 @@ def matrix_to_list(matrix: Matrix) -> list[list[int]]:
 
 
 def initial_cubies_3() -> Matrix:
-    """Return 3 cubies in solved orientation as a (9×3) state matrix."""
+    """Return 3 cubies in solved orientation as a (9x3) state matrix."""
 
     return np.tile(np.eye(3, dtype=int), (3, 1))

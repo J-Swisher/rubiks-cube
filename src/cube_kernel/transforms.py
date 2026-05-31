@@ -125,3 +125,39 @@ def orient_at_1(t: Matrix) -> Matrix:
 def orient_at_2(t: Matrix) -> Matrix:
     """Apply rotation t only to cubie 2."""
     return np.block([[_I, _Z, _Z], [_Z, _I, _Z], [_Z, _Z, t]])
+
+
+# ── 9-cubie face block matrices (27×27) ───────────────────────────────────────
+# State for 9 cubies is a (27×3) matrix: cubie k occupies rows 3k..3k+2.
+# Face layout (reading order):
+#   0 | 1 | 2
+#   3 | 4 | 5
+#   6 | 7 | 8
+# CW rotation (viewed from face normal): 0→2→8→6, 1→5→7→3, center rotates in place.
+
+_CW_GOES_TO  = [2, 5, 8, 1, 4, 7, 0, 3, 6]
+_CCW_GOES_TO = [6, 3, 0, 7, 4, 1, 8, 5, 2]
+
+
+def _face_rot(goes_to: list[int], r: Matrix) -> Matrix:
+    blocks = [[_Z] * 9 for _ in range(9)]
+    for src, dest in enumerate(goes_to):
+        blocks[dest][src] = r
+    return np.block(blocks)
+
+
+def face_state() -> Matrix:
+    """Return 9 cubies in solved orientation as a (27×3) state matrix."""
+    return np.tile(np.eye(3, dtype=int), (9, 1))
+
+
+FACE_TRANSFORMS: dict[str, Matrix] = {
+    "f+": _face_rot(_CW_GOES_TO,  z_minus_90()),
+    "f-": _face_rot(_CCW_GOES_TO, z_plus_90()),
+    "u+": _face_rot(_CW_GOES_TO,  y_minus_90()),
+    "u-": _face_rot(_CCW_GOES_TO, y_plus_90()),
+    "r+": _face_rot(_CW_GOES_TO,  x_plus_90()),
+    "r-": _face_rot(_CCW_GOES_TO, x_minus_90()),
+}
+
+TRANSFORMS.update(FACE_TRANSFORMS)

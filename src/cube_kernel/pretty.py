@@ -146,3 +146,31 @@ def show_cubie_state(state: Matrix, label: str = "") -> None:
     if label:
         print(label)
     print(fmt_cubie_state(state))
+
+
+def fmt_face_state(state: Matrix) -> str:
+    """Format a (27×3) face state as a 3×3 grid of labeled cubie blocks."""
+    state = np.asarray(state)
+    row_strs = []
+    for row_idx in range(3):
+        blocks = []
+        for col_idx in range(3):
+            i = row_idx * 3 + col_idx
+            label = f"Cubie {i}"
+            mat_lines = _mat_lines(state[3 * i : 3 * i + 3])
+            lw = max(len(label), max(len(l) for l in mat_lines))
+            blocks.append([label.center(lw)] + [l.ljust(lw) for l in mat_lines])
+        widths = [max(len(l) for l in b) for b in blocks]
+        h = max(len(b) for b in blocks)
+        padded = [list(b) + [""] * (h - len(b)) for b in blocks]
+        row_strs.append(
+            "\n".join("     ".join(b[i].ljust(w) for b, w in zip(padded, widths)) for i in range(h))
+        )
+    return "\n\n".join(row_strs)
+
+
+def show_face_state(state: Matrix, label: str = "") -> None:
+    """Print a (27×3) face state as a 3×3 grid of cubie blocks."""
+    if label:
+        print(label)
+    print(fmt_face_state(state))
